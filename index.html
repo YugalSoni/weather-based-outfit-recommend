@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather-Based Outfit Recommender</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+        h1 { color: #333; }
+        .box { background: white; padding: 20px; border-radius: 10px; max-width: 600px; margin: auto; }
+    </style>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+</head>
+<body>
+    <div class="box">
+        <h1>🌦 Weather & Outfit Recommendation</h1>
+        <form method="POST">
+            <label>Latitude:</label><br>
+            <input type="text" name="latitude" required><br><br>
+            <label>Longitude:</label><br>
+            <input type="text" name="longitude" required><br><br>
+            <label>Are you going to a party?</label><br>
+            <select name="party">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+            </select><br><br>
+            <button type="submit">Get Recommendations</button>
+        </form>
+
+        {% if weather %}
+        <hr>
+        <h2>📍 Weather Info</h2>
+        <p><strong>Location:</strong> ({{ weather.coord.lat }}, {{ weather.coord.lon }})</p>
+        <p><strong>Temperature:</strong> {{ weather.main.temp }}°C</p>
+        <p><strong>Humidity:</strong> {{ weather.main.humidity }}%</p>
+        <p><strong>Wind Speed:</strong> {{ weather.wind.speed }} m/s</p>
+        <p><strong>Pressure:</strong> {{ weather.main.pressure }} hPa</p>
+        <p><strong>Weather:</strong> {{ weather.weather[0].description }}</p>
+        <p><strong>Sunrise (IST):</strong> {{ convert_utc_to_ist(weather.sys.sunrise) }}</p>
+        <p><strong>Sunset (IST):</strong> {{ convert_utc_to_ist(weather.sys.sunset) }}</p>
+
+        <hr>
+        <h2>🧥 Outfit Suggestion</h2>
+        <p><strong>Top:</strong> {{ outfit.top }}</p>
+        <p><strong>Bottom:</strong> {{ outfit.bottom }}</p>
+        <p><strong>Time of Day:</strong> {{ outfit.day_time }}</p>
+        {% if outfit.extras %}
+            <p><strong>Extras:</strong> {{ outfit.extras | join(', ') }}</p>
+        {% endif %}
+        {% endif %}
+    </div>
+</body>
+</html>
